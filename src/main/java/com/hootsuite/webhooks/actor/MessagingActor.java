@@ -34,8 +34,9 @@ public class MessagingActor extends UntypedActor{
 
     private ActorRef messagingPendingActor;
 
-    @PostConstruct
-    private void init(){
+    @Override
+    public void preStart() throws Exception {
+        super.preStart();
         restClientActor = actorSystem.actorOf(
                 SpringExtension.SpringExtProvider.get(actorSystem)
                         .props(RestClientActor.class.getSimpleName()));
@@ -54,7 +55,6 @@ public class MessagingActor extends UntypedActor{
         if(message instanceof ErrorRestClientEvent){
             ErrorRestClientEvent messagingEvent = (ErrorRestClientEvent) message;
             messagingPendingActor.tell(new PendingMessageEvent(messagingEvent),self());
-            System.out.println(" IdDestination:"+messagingEvent.getUuid()+" Msg:"+messagingEvent.getBody());
         }
         if(message instanceof PendingMessageEvent){
             PendingMessageEvent messagingEvent = (PendingMessageEvent) message;
@@ -74,7 +74,6 @@ public class MessagingActor extends UntypedActor{
                 .url(destination.getUrl())
                 .destinationId(messagingEvent.getMessage().getDestinationId());
         restClientActor.tell(restClientEvent,self());
-        System.out.println(" IdDestination:"+c.getDestinationId()+" Msg:"+c.getMsgBody());
     }
 
 }

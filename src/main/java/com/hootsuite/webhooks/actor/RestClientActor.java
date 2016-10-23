@@ -20,8 +20,9 @@ public class RestClientActor extends UntypedActor{
 
     private RestTemplate restTemplate;
 
-    @PostConstruct
-    private void init(){
+    @Override
+    public void preStart() throws Exception {
+        super.preStart();
         restTemplate = new RestTemplate();
     }
 
