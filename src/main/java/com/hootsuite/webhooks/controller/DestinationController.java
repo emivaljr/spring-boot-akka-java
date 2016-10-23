@@ -1,10 +1,11 @@
 package com.hootsuite.webhooks.controller;
 
 import com.hootsuite.webhooks.domain.Destination;
+import com.hootsuite.webhooks.service.DestinationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.ws.Response;
-import java.util.List;
 
 /**
  * Created by emival on 22/10/16.
@@ -13,18 +14,22 @@ import java.util.List;
 @RequestMapping(value = "/destination")
 public class DestinationController {
 
-    @RequestMapping(method = RequestMethod.GET)
+    @Autowired
+    private DestinationService destinationService;
 
-    public @ResponseBody List<Destination> list() {
-        return null;
+    @RequestMapping(method = RequestMethod.GET)
+    public @ResponseBody
+    Iterable<Destination> list() {
+        return destinationService.listDestination();
     }
+
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody Destination newDestination(@RequestBody Destination destination) {
-        return null;
+        return destinationService.saveDestination(destination);
     }
     @RequestMapping(method = RequestMethod.DELETE)
-    public Response<String> deleteDestination(@RequestParam Long destinationId) {
-        return null;
+    public void deleteDestination(@RequestParam Long destinationId) {
+        destinationService.deleteDestination(destinationId);
     }
 
 }

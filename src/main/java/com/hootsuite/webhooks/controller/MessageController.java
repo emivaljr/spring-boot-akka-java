@@ -3,13 +3,15 @@ package com.hootsuite.webhooks.controller;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import com.hootsuite.webhooks.SpringExtension;
-import com.hootsuite.webhooks.actor.MessagingPendingActor;
-import com.hootsuite.webhooks.domain.Destination;
+import com.hootsuite.webhooks.actor.MessagingActor;
 import com.hootsuite.webhooks.domain.Message;
+import com.hootsuite.webhooks.event.MessagingEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by emival on 22/10/16.
@@ -26,13 +28,16 @@ public class MessageController {
     @PostConstruct
     private void init() {
         messagingActor = actorSystem.actorOf(
-                SpringExtension.SpringExtProvider.get(actorSystem).props(MessagingPendingActor.class.getSimpleName()));
+                SpringExtension.SpringExtProvider.get(actorSystem).props(MessagingActor.class.getSimpleName()));
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody
-    Destination newDestination(@RequestBody Message message) {
-        messagingActor.tell(message, null);
-        return null;
+    public void newDestination(@RequestBody Message message) {
+        MessagingEvent messagingEvent
+                = new MessagingEvent()
+                .uuid(UUID.randomUUID())
+                .message(message)
+                .timeOfArrival(new Date());
+        messagingActor.tell(messagingEvent, null);
     }
 }
