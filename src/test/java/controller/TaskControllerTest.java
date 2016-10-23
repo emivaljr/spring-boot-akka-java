@@ -1,7 +1,6 @@
 package controller;
 
-import com.example.Application;
-import com.example.repository.TaskRepository;
+import com.hootsuite.webhooks.Application;
 import com.jayway.restassured.RestAssured;
 import org.apache.http.HttpStatus;
 import org.junit.Before;

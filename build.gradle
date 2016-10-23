@@ -1,22 +1,20 @@
 buildscript {
     ext {
-        springBootVersion = '1.2.3.RELEASE'
+        springBootVersion = '1.4.0.RELEASE'
     }
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
-        classpath("io.spring.gradle:dependency-management-plugin:0.5.0.RELEASE")
-
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "io.spring.gradle:dependency-management-plugin:0.4.0.RELEASE"
     }
 }
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: 'spring-boot' 
-apply plugin: 'io.spring.dependency-management'
+apply plugin: 'spring-boot'
+apply plugin: "io.spring.dependency-management"
 apply plugin: 'scala'
 
 jar {
@@ -32,14 +30,9 @@ repositories {
 
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-actuator")
     compile("org.springframework.boot:spring-boot-starter-aop")
-    compile("org.springframework.boot:spring-boot-starter-data-jpa")
-    compile("com.jayway.restassured:rest-assured:2.4.1")
-    compile("org.apache.httpcomponents:httpcore:4.4.1")
-    compile("org.scala-lang:scala-library:2.11.6")
     compile("org.springframework.boot:spring-boot-starter-web")
-    runtime("mysql:mysql-connector-java")
+    compile("org.springframework.data:spring-data-keyvalue")
     testCompile("org.springframework.boot:spring-boot-starter-test")
 
 }
@@ -49,17 +42,13 @@ tasks.withType(ScalaCompile) {
 }
 
 dependencies {
-    compile group: 'com.typesafe.akka', name: 'akka-actor_2.11', version: '2.3.10'
+    compile group: 'com.typesafe.akka', name: 'akka-actor_2.11', version: '2.4.11'
+    compile group: 'com.typesafe.akka', name: 'akka-persistence_2.11', version: '2.4.11'
+    compile group: 'org.iq80.leveldb', name: 'leveldb', version: '0.7'
+    compile group: 'org.fusesource.leveldbjni', name: 'leveldbjni-all', version: '1.8'
     compile group: 'org.scala-lang', name: 'scala-library', version: '2.11.6'
 }
 
-
-eclipse {
-    classpath {
-         containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
-         containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7'
-    }
-}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
